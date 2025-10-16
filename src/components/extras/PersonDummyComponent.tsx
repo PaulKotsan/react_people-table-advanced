@@ -1,3 +1,3 @@
 export const PersonDummyComponent = () => {
-    return <div></div>;
+  return <div></div>;
 };

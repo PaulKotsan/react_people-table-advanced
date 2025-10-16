@@ -1,8 +1,8 @@
-import { Person } from "./Person";
+import { Person } from './Person';
 
 export interface PeopleTableProps {
-    peopleList: Person[];
-};
+  peopleList: Person[];
+}
 
 export type PersonLinkProps = {
   person?: Person;

@@ -1,14 +1,31 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { PersonLinkProps } from '../types/props';
 
 export const PersonLink = ({ person, name }: PersonLinkProps) => {
+  const [searchParams] = useSearchParams();
+
   if (person) {
     switch (person.sex) {
       case 'm':
-        return <Link to={`/people/${person.slug}`}>{person.name}</Link>;
+        return (
+          <Link
+            to={{
+              pathname: `/people/${person?.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
+            {person.name}
+          </Link>
+        );
       case 'f':
         return (
-          <Link to={`/people/${person.slug}`} className="has-text-danger">
+          <Link
+            className="has-text-danger"
+            to={{
+              pathname: `/people/${person?.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
             {person.name}
           </Link>
         );
