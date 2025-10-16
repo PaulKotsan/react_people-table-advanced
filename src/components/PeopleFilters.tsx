@@ -5,19 +5,19 @@ import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const centuries = searchParams.getAll('century') || [];
+  const centuries = searchParams.getAll('centuries') || [];
   const sexFilter = searchParams.get('sex');
 
-  // ACTUALLY, it is better do handle all URL changes here.
   function toggleCenturies(century: string) {
     const params = new URLSearchParams(searchParams);
+    const currentCenturies = params.getAll('centuries'); // fresh read
 
-    const newCenturies = centuries.includes(century)
-      ? centuries.filter(curCentury => curCentury !== century)
-      : [...centuries, century];
+    const newCenturies = currentCenturies.includes(century)
+      ? currentCenturies.filter(c => c !== century)
+      : [...currentCenturies, century];
 
-    params.delete('century');
-    newCenturies.forEach(curCentury => params.append('century', curCentury));
+    params.delete('centuries');
+    newCenturies.forEach(c => params.append('centuries', c));
     setSearchParams(params);
   }
 
@@ -132,7 +132,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to={{ search: getSearchWith(searchParams, { century: null }) }}
+              to={{ search: getSearchWith(searchParams, { centuries: null }) }}
             >
               All
             </Link>
@@ -144,7 +144,7 @@ export const PeopleFilters = () => {
         <Link
           className="button is-link is-outlined is-fullwidth"
           to={{
-            search: getSearchWith(searchParams, { century: null, sex: null }),
+            search: getSearchWith(searchParams, { centuries: null, sex: null }),
           }}
         >
           Reset all filters

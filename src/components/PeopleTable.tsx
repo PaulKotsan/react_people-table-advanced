@@ -17,7 +17,7 @@ export const PeopleTable = ({ peopleList }: PeopleTableProps) => {
   const order = searchParams.get('order');
   const searchQuery = searchParams.get('query');
   const centuriesFilter = useMemo(
-    () => searchParams.getAll('century'),
+    () => searchParams.getAll('centuries'),
     [searchParams],
   );
 
@@ -36,9 +36,17 @@ export const PeopleTable = ({ peopleList }: PeopleTableProps) => {
     if (searchQuery) {
       const queryLower = searchQuery.toLowerCase();
 
-      listCopy = listCopy.filter(person =>
-        person.name.toLowerCase().includes(queryLower),
-      );
+      listCopy = listCopy.filter(person => {
+        const nameMatch = person.name?.toLowerCase().includes(queryLower);
+        const motherMatch = person.motherName
+          ?.toLowerCase()
+          .includes(queryLower);
+        const fatherMatch = person.fatherName
+          ?.toLowerCase()
+          .includes(queryLower);
+
+        return nameMatch || motherMatch || fatherMatch;
+      });
     }
 
     if (sexField) {
@@ -133,7 +141,7 @@ export const PeopleTable = ({ peopleList }: PeopleTableProps) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <Link
-                to={{ search: getSearchWith({ sort: null }, searchParams) }}
+                to={{ search: getSearchWith(searchParams, { sort: null }) }}
               >
                 <span className="icon">
                   <i
@@ -152,7 +160,7 @@ export const PeopleTable = ({ peopleList }: PeopleTableProps) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <Link
-                to={{ search: getSearchWith({ sort: null }, searchParams) }}
+                to={{ search: getSearchWith(searchParams, { sort: null }) }}
               >
                 <span className="icon">
                   <i
@@ -174,8 +182,16 @@ export const PeopleTable = ({ peopleList }: PeopleTableProps) => {
 
       <tbody>
         {tempPeopleList?.map(person => {
-          const mother = peopleList.find(p => p.name === person.motherName);
-          const father = peopleList.find(p => p.name === person.fatherName);
+          const mother = peopleList.find(
+            p =>
+              p.name.toLocaleLowerCase() ===
+              person.motherName?.toLocaleLowerCase(),
+          );
+          const father = peopleList.find(
+            p =>
+              p.name.toLocaleLowerCase() ===
+              person.fatherName?.toLocaleLowerCase(),
+          );
 
           return (
             // highlight here
